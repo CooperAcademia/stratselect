@@ -1,13 +1,13 @@
-Package: mcce
-Title: Models of Consumer Choice Experiments
-Version: 0.2.4.9002
+Package: stratselect
+Title: Models for determining decision strategies in consumer choice experiments
+Version: 0.2.5
 Authors@R: 
     person(given = "Gavin",
            family = "Cooper",
            role = c("aut", "cre"),
            email = "gavin@gavincooper.net",
            comment = c(ORCID = "0000-0002-7186-5293"))
-Description: This package contains the likelihood functions and scripts
+Description: This package contains the likelihood functions
     necessary to recreate the modelling work for my PhD.
 License: GPL-3
 Encoding: UTF-8
