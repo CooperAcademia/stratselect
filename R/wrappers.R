@@ -64,7 +64,7 @@ model_wrapper <- function(x, data, model) {
 rmodel_wrapper <- function(x, data, model, contaminant_prob = 0.02, min_rt = 0, max_rt = 1) {
   data$accept <- NA
   data$rt <- NA
-  x <- transform_pars(x)
+  x <- transform_pars(x) %>% unlist()
   drifts <- data.frame(
     AccPrice = x[data$v_acc_p],
     RejPrice = x[data$v_rej_p],
