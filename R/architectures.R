@@ -104,7 +104,8 @@ rll_IEX <- function(data, A, b_acc, b_rej, t0, drifts) {
     acc_rating <- rlba_norm(1, A, b_acc, t0, drifts$AccRating[[row]], 1, posdrift = FALSE)
     rej_price <- rlba_norm(1, A, b_rej, t0, drifts$RejPrice[[row]], 1, posdrift = FALSE)
     rej_rating <- rlba_norm(1, A, b_rej, t0, drifts$RejRating[[row]], 1, posdrift = FALSE)
-    maxacc <- max(acc_price[, "rt"], acc_rating[, "rt"], na.rm = TRUE)
+    maxacc <- max(acc_price[, "rt"], acc_rating[, "rt"])
+    if (is.na(maxacc)) maxacc <- Inf # If one did not complete (neg drift) - then can't accept
     minrej <- min(rej_price[, "rt"], rej_rating[, "rt"], na.rm = TRUE)
     if (maxacc < minrej) {
       data$rt[row] <- maxacc
