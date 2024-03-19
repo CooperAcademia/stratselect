@@ -23,7 +23,7 @@
 #'   the provided parameter values
 ll_IST <- function(rt, A, b_acc, b_rej, t0, drifts, accept) { # nolint
   if (accept) {
-    ll <- (dlba_norm(rt, A, b_acc, t0, drifts$AccPrice, ) *
+    ll <- (dlba_norm(rt, A, b_acc, t0, drifts$AccPrice, 1) *
             (1 - plba_norm(rt, A, b_acc, t0, drifts$AccRating, 1)) +
             dlba_norm(rt, A, b_acc, t0, drifts$AccRating, 1) *
             (1 - plba_norm(rt, A, b_acc, t0, drifts$AccPrice, 1))) *
