@@ -64,12 +64,12 @@ model_wrapper <- function(x, data, model) {
 rmodel_wrapper <- function(x, data, model, contaminant_prob = 0.02, min_rt = 0, max_rt = 1) {
   data$accept <- NA
   data$rt <- NA
-  x <- transform_pars(x) %>% unlist()
+  x <- transform_pars(x)
   drifts <- data.frame(
-    AccPrice = x[data$v_acc_p],
-    RejPrice = x[data$v_rej_p],
-    AccRating = x[data$v_acc_r],
-    RejRating = x[data$v_rej_r]
+    AccPrice = t(x[data$v_acc_p]),
+    RejPrice = t(x[data$v_rej_p]),
+    AccRating = t(x[data$v_acc_r]),
+    RejRating = t(x[data$v_rej_r])
   )
   # Return newly generated data
   gen_df <- model(data, x$A, x$b_acc, x$b_rej, x$t0, drifts)
