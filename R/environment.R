@@ -7,8 +7,7 @@ known_vars <- c("MCCE_EST_EXP", "VDCE_DISPLAY", "NCPUS", "PBS_JOBID",
                 "MCCE_MIN_RT", "MCCE_MAX_RT", "MCCE_CONTAM",
                 "RANDOM_SEED", "MCCE_MODEL", "MCCE_METHOD",
                 "MCCE_ORIG_JOB_DATA", "MCCE_STAGES",
-                "MCCE_REC_MODEL", "MCCE_REC_MED", "MCCE_MODEL_FILE",
-                "MCCE_REC_DATA")
+                "MCCE_REC_MODEL", "MCCE_REC_MED", "MCCE_MODEL_FILE")
 
 known_experiments <- c("NumericVDCE", "SymbolicVDCE", "PrefDCE")
 known_models <- c("std", "reduced", "reduced_more")
@@ -118,14 +117,12 @@ data_env <- function(envars) {
   test_model <- envars$MCCE_REC_MODEL
   median_file <- envars$MCCE_REC_MED
   model_file <- envars$MCCE_MODEL_FILE
-  recovery_data <- envars$MCCE_REC_DATA
 
   list(early_data = early_data,
        experimental_data = experimental_data,
        test_model = test_model,
        median_file = median_file,
-       model_file = model_file,
-       recovery_data = recovery_data)
+       model_file = model_file)
 }
 
 model_env <- function(envars) {

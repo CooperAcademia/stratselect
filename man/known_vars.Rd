@@ -5,7 +5,7 @@
 \alias{known_vars}
 \title{Known environment variables}
 \format{
-An object of class \code{character} of length 18.
+An object of class \code{character} of length 17.
 }
 \usage{
 known_vars

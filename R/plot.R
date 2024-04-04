@@ -79,26 +79,3 @@ trace_plot <- function(sample_df, par) {
          x = "Sample",
          y = "Parameter Value")
 }
-
-
-#' Plot an architecture comparison barplot
-#'
-#' ...
-#'
-#' @param medians The medians for each architecture/person
-#'
-#' @return A ggplot object
-#'
-#' @import ggplot2
-#' @export
-arch_plot <- function(medians) {
-  medians %>%
-    filter(subjectid != "Group") %>%
-    ggplot(aes(x = subjectid, y = rel_val, fill = parameter)) +
-    geom_col() +
-    theme(axis.title.x = element_blank(),
-          axis.text.x = element_blank(),
-          axis.ticks.x = element_blank()) +
-    labs(y = "Relative Evidence") +
-    scale_y_continuous(labels = NULL, breaks = NULL)
-}

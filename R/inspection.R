@@ -31,24 +31,6 @@ get_summary <- function(pars, tform = base::identity, sfunc = stats::median) {
 }
 
 
-#' Reshape median architecture estimates for plotting
-#'
-#' @param medians
-#'
-#' @return A tibble augmented ready for plotting
-#' @export
-arch_medians <- function(medians, grouping_vars = c("subjectid")) {
-  medians %>%
-    group_by(across(all_of(grouping_vars))) %>%
-    mutate(rel_val = value / sum(value)) %>%
-    mutate(parameter = stringr::str_remove(parameter, "alpha_")) %>%
-    mutate(subjectid = case_when(
-      subjectid == "theta_mu" ~ "Group",
-      TRUE ~ stringr::str_pad(subjectid, 2, pad = "0")
-    ))
-}
-
-
 #' Takes a sample tibble and rearranges it to a long df with just drift rates.
 #'
 #' @param sample_df A dataframe with columns for each parameter and sampleid
@@ -78,36 +60,4 @@ get_drifts <- function(sample_df) {
     response = fct_recode(.data$response, Accept = "acc", Reject = "rej"),
     attribute = fct_recode(.data$attribute, Price = "p", Rating = "r")
   )
-}
-
-#' Reorder architectures and subjects of medians for plotting
-#'
-#' From a arch_medians tibble, reorder the subjectID's and architectures
-#' in order for them to be presented in a plot nicely.
-#'
-#' @param model_medians
-#'
-#' @return ordered model medians
-#'
-#' @export
-order_arch_medians <- function(model_medians, arch_order = NULL) {
-  if (is.null(arch_order)) {
-    arch_order <- model_medians %>%
-      group_by(parameter) %>%
-      summarise(mean_val = mean(rel_val)) %>%
-      arrange(mean_val) %>%
-      pull(parameter)
-  }
-
-  most_common_arch <- arch_order[length(arch_order)]
-
-  subject_order <- model_medians %>%
-    filter(parameter == most_common_arch) %>%
-    arrange(desc(rel_val)) %>%
-    pull(subjectid)
-
-  model_medians %>%
-    mutate(subjectid = factor(subjectid, subject_order)) %>%
-    filter(subjectid != "Group") %>%
-    mutate(parameter = factor(parameter, arch_order))
 }
