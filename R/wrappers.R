@@ -144,6 +144,55 @@ dirichlet_mix_ll <- function(x, data, contaminant_prob = 0.02, alpha_indices = c
   loglike
 }
 
+#' Top level log-likelihood function that samples from the full model
+#'
+#' This function selects one of the possible architectures using a random
+#' dirichlet sample weighted by the α values from the parameter vector. It
+#' then delegates the generation of rt and response to the individual model
+#'
+#' @section The parameter vector:
+#'
+#' The vector x should contain the following elements:
+#' A number of \eqn{\alpha}
+#' values
+#'
+#' \itemize{
+#'   \item A number of \strong{\eqn{\alpha}} parameter values matching the
+#'     number and order of the ll_funcs vector defined in this same file.
+#'   \item \strong{A} - the start point variability
+#'   \item \strong{b^a} and \strong{b^r}, the thresholds to either accept or
+#'     reject the item.
+#'   \item \strong{t0} - the residual time, bounded above by the minimum
+#'     response time for the participant
+#'   \item 12 drift rates. For each attribute there are three stimulus levels.
+#'     For each of these 6 attribute levels there are two drift rates, one drift
+#'     rate to accept (\strong{v^a}) and one to reject (\strong{v^r})
+#' }
+#'
+#' @param x A single row tibble containing parameter values to test
+#' @param data The data for a single subject
+#' @param contaminant_prob The probability used for contaminant process in the
+#'   modelling. A contaminant process is just a uniform random response in the
+#'   allowable time window.
+#' @param alpha_indices A vector containing the indicies of the alpha parameters
+#'   - that is the parameters that correspond to the dirichlet shape parameters.
+#' @param min_rt The smallest possible response time in the data
+#' @param max_rt The largest possible response time in the data
+#' @inheritParams transform_pars
+#'
+#' @return The log of the likelihood for the data under parameter values x
+#' @export
+rdirichlet_mix_ll <- function(x, data, contaminant_prob = 0.02, alpha_indices = c(1, 2), min_rt = 0, max_rt = 1, tforms = "std") {
+  x_t <- transform_pars(x, tforms)
+
+  # all decision rules
+  rdev <- MCMCpack::rdirichlet(1, unlist(x_t[alpha_indices]))
+  func_idx <- sample(alpha_indices, 1, prob = rdev)
+  ll_func <- ll_funcs[[func_idx]]$sample
+  gen_df <- rmodel_wrapper(x, data, ll_func, contaminant_prob = contaminant_prob, min_rt = min_rt, max_rt = max_rt)
+  gen_df
+}
+
 
 #' Top level log-likelihood function that implements the single model sampling
 #'

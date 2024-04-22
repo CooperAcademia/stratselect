@@ -1,6 +1,6 @@
 Package: stratselect
 Title: Models for determining decision strategies in consumer choice experiments
-Version: 0.2.9
+Version: 0.2.10
 Authors@R: 
     person(given = "Gavin",
            family = "Cooper",

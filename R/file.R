@@ -23,18 +23,3 @@ get_base_filename <- function(vars) {
 
   paste(exp, id, tag, sep = "_")
 }
-
-#' Extract the data from a sampler object stored in an RData file
-#'
-#' The sampler object is assumed to be called "sampler", no checks are done
-#'
-#' @param filename The RData file containing the sampler object
-#'
-#' @return The data tibble that was used as input to the modelling
-#'
-#' @export
-get_estimation_data <- function(filename) {
-  load(here::here("data", "output", filename), ex <- new.env())
-  ex$sampler$data %>%
-    tibble()
-}
