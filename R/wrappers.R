@@ -314,6 +314,10 @@ transform_pars <- function(pars, tforms = "std") {
       newpars[v_rej_p] <- newpars["beta0"] - newpars["beta1_p"] * newpars[v_acc_p]
       newpars[v_rej_r] <- newpars["beta0"] - newpars["beta1_r"] * newpars[v_acc_r]
     }
+  } else if (tforms == "linear") {
+    force_pos_mask <- !startsWith(names(pars), "v")
+    newpars <- pars
+    newpars[force_pos_mask] <- exp(newpars[force_pos_mask])
   }
   # Always need to adjust for threshold > A
   newpars["b_acc"] <- newpars["b_acc"] + newpars["A"]
