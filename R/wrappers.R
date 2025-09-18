@@ -23,10 +23,10 @@ v_rej_r <- drift_names[grepl("rej_r", drift_names)]
 model_wrapper <- function(x, data, model, drift_transform = "std") {
   if (drift_transform == "linear") {
     drifts <- data.frame(
-      AccPrice = x$v_acc_p_intercept + x$v_acc_p_slope * data$price_raw,
-      RejPrice = x$v_rej_p_intercept + x$v_rej_p_slope * data$price_raw,
-      AccRating = x$v_acc_r_intercept + x$v_acc_r_slope * data$rating_raw,
-      RejRating = x$v_rej_r_intercept + x$v_rej_r_slope * data$rating_raw
+      AccPrice = x[v_acc_p_intercept] + x[v_acc_p_slope] * data$price_raw,
+      RejPrice = x[v_rej_p_intercept] + x[v_rej_p_slope] * data$price_raw,
+      AccRating = x[v_acc_r_intercept] + x[v_acc_r_slope] * data$rating_raw,
+      RejRating = x[v_rej_r_intercept] + x[v_rej_r_slope] * data$rating_raw
     )
   } else {
     drifts <- data.frame(
