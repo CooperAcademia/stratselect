@@ -20,13 +20,22 @@ v_rej_r <- drift_names[grepl("rej_r", drift_names)]
 #'
 #' @return The log of the likelihood for the data under parameter values x
 #' @export
-model_wrapper <- function(x, data, model) {
-  drifts <- data.frame(
-    AccPrice = x[data$v_acc_p],
-    RejPrice = x[data$v_rej_p],
-    AccRating = x[data$v_acc_r],
-    RejRating = x[data$v_rej_r]
-  )
+model_wrapper <- function(x, data, model, drift_transform = "std") {
+  if (drift_transform == "linear") {
+    drifts <- data.frame(
+      AccPrice = x$v_acc_p_intercept + x$v_acc_p_slope * data$price_raw,
+      RejPrice = x$v_rej_p_intercept + x$v_rej_p_slope * data$price_raw,
+      AccRating = x$v_acc_r_intercept + x$v_acc_r_slope * data$rating_raw,
+      RejRating = x$v_rej_r_intercept + x$v_rej_r_slope * data$rating_raw
+    )
+  } else {
+    drifts <- data.frame(
+      AccPrice = x[data$v_acc_p],
+      RejPrice = x[data$v_rej_p],
+      AccRating = x[data$v_acc_r],
+      RejRating = x[data$v_rej_r]
+    )
+  }
 
   accepts <- data$accept == 2
   acc_args <- c(
@@ -136,7 +145,7 @@ dirichlet_mix_ll <- function(x, data, contaminant_prob = 0.02, alpha_indices = c
   rdev <- MCMCpack::rdirichlet(1, x[alpha_indices])
   func_idx <- sample(alpha_indices, 1, prob = rdev)
   ll_func <- ll_funcs[[func_idx]]$likelihood
-  trial_ll <- model_wrapper(x, data, ll_func)
+  trial_ll <- model_wrapper(x, data, ll_func, drift_transform = tforms)
   new_like <- (1 - contaminant_prob) * trial_ll +
     contaminant_prob * (stats::dunif(data$rt, min_rt, max_rt) / 2)
   loglike <- sum(log(pmax(new_like, 1e-10)))
