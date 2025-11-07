@@ -70,10 +70,10 @@ model_wrapper <- function(x, data, model, drift_transform = "std") {
 #'
 #' @return The log of the likelihood for the data under parameter values x
 #' @export
-rmodel_wrapper <- function(x, data, model, contaminant_prob = 0.02, min_rt = 0, max_rt = 1) {
+rmodel_wrapper <- function(x, data, model, contaminant_prob = 0.02, min_rt = 0, max_rt = 1, tforms = "std") {
   data$accept <- NA
   data$rt <- NA
-  x <- transform_pars(x)
+  x <- transform_pars(x, tforms)
   drifts <- data.frame(
     AccPrice = t(x[data$v_acc_p]),
     RejPrice = t(x[data$v_rej_p]),
@@ -198,7 +198,7 @@ rdirichlet_mix_ll <- function(x, data, contaminant_prob = 0.02, alpha_indices = 
   rdev <- MCMCpack::rdirichlet(1, unlist(x_t[alpha_indices]))
   func_idx <- sample(alpha_indices, 1, prob = rdev)
   ll_func <- ll_funcs[[func_idx]]$sample
-  gen_df <- rmodel_wrapper(x, data, ll_func, contaminant_prob = contaminant_prob, min_rt = min_rt, max_rt = max_rt)
+  gen_df <- rmodel_wrapper(x, data, ll_func, contaminant_prob = contaminant_prob, min_rt = min_rt, max_rt = max_rt, tforms = tforms)
   gen_df
 }
 
@@ -230,8 +230,8 @@ rdirichlet_mix_ll <- function(x, data, contaminant_prob = 0.02, alpha_indices = 
 #'
 #' @return The log of the likelihood for the data under parameter values x
 #' @export
-single_model_ll <- function(x, data, contaminant_prob = 0.02, architecture = "IST", min_rt = 0, max_rt = 1) {
-  x <- transform_pars(x)
+single_model_ll <- function(x, data, contaminant_prob = 0.02, architecture = "IST", min_rt = 0, max_rt = 1, tforms = "std") {
+  x <- transform_pars(x, tforms)
 
   # all decision rules
   func_idx <- match(architecture, names_ll())
