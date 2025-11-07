@@ -207,7 +207,7 @@ rdirichlet_mix_ll <- function(x, data, contaminant_prob = 0.02, alpha_indices = 
   rdev <- MCMCpack::rdirichlet(1, unlist(x_t[alpha_indices]))
   func_idx <- sample(alpha_indices, 1, prob = rdev)
   ll_func <- ll_funcs[[func_idx]]$sample
-  gen_df <- rmodel_wrapper(x, data, ll_func, contaminant_prob = contaminant_prob, min_rt = min_rt, max_rt = max_rt, tforms = tforms)
+  gen_df <- rmodel_wrapper(x, data, ll_func, contaminant_prob = contaminant_prob, min_rt = min_rt, max_rt = max_rt, drift_transform = tforms)
   gen_df
 }
 
