@@ -4,7 +4,7 @@
 \alias{model_wrapper}
 \title{Wrapper for individual model log likelihood function}
 \usage{
-model_wrapper(x, data, model)
+model_wrapper(x, data, model, drift_transform = "std")
 }
 \arguments{
 \item{x}{A named vector containing parameter values to test}

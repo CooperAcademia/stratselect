@@ -74,12 +74,21 @@ rmodel_wrapper <- function(x, data, model, contaminant_prob = 0.02, min_rt = 0, 
   data$accept <- NA
   data$rt <- NA
   x <- transform_pars(x, tforms)
-  drifts <- data.frame(
-    AccPrice = t(x[data$v_acc_p]),
-    RejPrice = t(x[data$v_rej_p]),
-    AccRating = t(x[data$v_acc_r]),
-    RejRating = t(x[data$v_rej_r])
-  )
+  if (drift_transform == "linear") {
+    drifts <- data.frame(
+      AccPrice = x["v_acc_p_intercept"] + x["v_acc_p_slope"] * data$price_raw,
+      RejPrice = x["v_rej_p_intercept"] + x["v_rej_p_slope"] * data$price_raw,
+      AccRating = x["v_acc_r_intercept"] + x["v_acc_r_slope"] * data$rating_raw,
+      RejRating = x["v_rej_r_intercept"] + x["v_rej_r_slope"] * data$rating_raw
+    )
+  } else {
+    drifts <- data.frame(
+      AccPrice = x[data$v_acc_p],
+      RejPrice = x[data$v_rej_p],
+      AccRating = x[data$v_acc_r],
+      RejRating = x[data$v_rej_r]
+    )
+  }
   # Return newly generated data
   gen_df <- model(data, x$A, x$b_acc, x$b_rej, x$t0, drifts)
   gen_df$generator <- "model"
