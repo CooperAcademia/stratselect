@@ -70,7 +70,7 @@ model_wrapper <- function(x, data, model, drift_transform = "std") {
 #'
 #' @return The log of the likelihood for the data under parameter values x
 #' @export
-rmodel_wrapper <- function(x, data, model, contaminant_prob = 0.02, min_rt = 0, max_rt = 1, tforms = "std") {
+rmodel_wrapper <- function(x, data, model, contaminant_prob = 0.02, min_rt = 0, max_rt = 1, drift_transform = "std") {
   data$accept <- NA
   data$rt <- NA
   x <- transform_pars(x, tforms)
